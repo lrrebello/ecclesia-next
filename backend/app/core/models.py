@@ -79,8 +79,8 @@ class Family(Base):
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=datetime.utcnow)
 
     church = relationship("Church", back_populates="families")
-    responsible = relationship("User", foreign_keys=[responsible_id])
-    members = relationship("User", back_populates="family", foreign_keys=[User.family_id])
+    responsible = relationship("User", foreign_keys="Family.responsible_id")
+    members = relationship("User", back_populates="family", foreign_keys="User.family_id")
 
 
 class User(Base):
