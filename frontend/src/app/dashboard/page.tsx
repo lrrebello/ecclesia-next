@@ -62,19 +62,22 @@ export default function DashboardPage() {
           <p className="mt-2 text-slate-300">{user?.email}</p>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-lg bg-slate-800 p-4">
-              <p className="text-sm text-slate-400">Perfil</p>
-              <p className="mt-1 font-medium">Ativo</p>
-            </div>
+            <a
+              href="/ministries"
+              className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700"
+            >
+              <p className="text-sm text-slate-400">Ministérios</p>
+              <p className="mt-1 font-medium">Gerenciar ministérios</p>
+            </a>
 
             <div className="rounded-lg bg-slate-800 p-4">
-              <p className="text-sm text-slate-400">Módulos</p>
+              <p className="text-sm text-slate-400">Membros</p>
               <p className="mt-1 font-medium">Em construção</p>
             </div>
 
             <div className="rounded-lg bg-slate-800 p-4">
-              <p className="text-sm text-slate-400">Próximo passo</p>
-              <p className="mt-1 font-medium">Membros e ministérios</p>
+              <p className="text-sm text-slate-400">Eventos</p>
+              <p className="mt-1 font-medium">Em construção</p>
             </div>
           </div>
         </div>
