@@ -69,7 +69,7 @@ def login(payload: LoginInput, db: Session = Depends(get_db)):
     if not user or not user.password_hash or not verify_password(payload.password, user.password_hash):
         raise HTTPException(401, "E-mail ou senha inválidos")
 
-    if user.status != "active":
+    if user.status not in ["active", "approved"] or not user.is_email_verified:
         raise HTTPException(403, "Conta pendente, rejeitada ou e-mail não verificado")
 
     return {
