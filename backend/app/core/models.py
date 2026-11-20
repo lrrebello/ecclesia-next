@@ -20,13 +20,18 @@ member_ministries = Table(
 class Church(Base):
     __tablename__ = "churches"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    parent_id: Mapped[str | None] = mapped_column(ForeignKey("churches.id"))
     name: Mapped[str] = mapped_column(String(160), nullable=False)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
+    type: Mapped[str] = mapped_column(String(30), default="branch")
     country: Mapped[str | None] = mapped_column(String(80))
     currency_code: Mapped[str] = mapped_column(String(3), default="EUR")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_main: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    users = relationship("User", back_populates="church")
+
+    parent = relationship("Church", remote_side=[id], backref="branches")
+    users = relationship("User", back_populates="church", foreign_keys=["User.church_id"])
     ministries = relationship("Ministry", back_populates="church")
     families = relationship("Family", back_populates="church")
 
@@ -106,7 +111,7 @@ class User(Base):
     marketing_consent: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    church = relationship("Church", back_populates="users")
+    church = relationship("Church", back_populates="users", foreign_keys=[church_id])
     family = relationship("Family", back_populates="members", foreign_keys=[family_id])
     roles = relationship("UserRole", back_populates="user")
     ministries = relationship(

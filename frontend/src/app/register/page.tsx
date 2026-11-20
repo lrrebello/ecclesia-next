@@ -1,14 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+type ChurchOption = {
+  id: string;
+  name: string;
+  slug: string;
+  branches: { id: string; name: string; slug: string }[];
+};
+
 export default function RegisterPage() {
   const router = useRouter();
+  const [churches, setChurches] = useState<ChurchOption[]>([]);
+  const [selectedChurch, setSelectedChurch] = useState("");
+  const [branchSlug, setBranchSlug] = useState("");
   const [form, setForm] = useState({
-    church_slug: "igreja-teste",
     name: "",
     email: "",
     password: "",
@@ -34,6 +43,16 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    async function loadChurches() {
+      const response = await fetch(`${API_URL}/api/v1/churches/public`);
+      const data = await response.json();
+      setChurches(data.churches);
+    }
+
+    loadChurches();
+  }, []);
+
   function update(field: string, value: string | boolean) {
     setForm((current) => ({ ...current, [field]: value }));
   }
@@ -46,6 +65,7 @@ export default function RegisterPage() {
 
     const payload = {
       ...form,
+      branch_slug: branchSlug,
       birth_date: form.birth_date || null,
       baptism_date: form.baptism_date || null,
       conversion_date: form.conversion_date || null,
@@ -69,15 +89,49 @@ export default function RegisterPage() {
     setLoading(false);
   }
 
+  const selected = churches.find((church) => church.id === selectedChurch);
+
   return (
     <main className="min-h-screen bg-slate-950 p-6 text-white">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-3xl font-bold">Cadastro de membro</h1>
         <p className="mt-2 text-slate-400">
-          Preencha seus dados. Após o cadastro, sua conta será analisada pela liderança.
+          Escolha a igreja e a filial onde deseja se cadastrar.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-xl bg-slate-900 p-6">
+          <select
+            className="w-full rounded-lg bg-slate-800 p-3"
+            value={selectedChurch}
+            onChange={(event) => {
+              setSelectedChurch(event.target.value);
+              setBranchSlug("");
+            }}
+            required
+          >
+            <option value="">Selecione a igreja</option>
+            {churches.map((church) => (
+              <option key={church.id} value={church.id}>
+                {church.name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="w-full rounded-lg bg-slate-800 p-3"
+            value={branchSlug}
+            onChange={(event) => setBranchSlug(event.target.value)}
+            required
+            disabled={!selected}
+          >
+            <option value="">Selecione a filial</option>
+            {selected?.branches.map((branch) => (
+              <option key={branch.id} value={branch.slug}>
+                {branch.name}
+              </option>
+            ))}
+          </select>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <input className="rounded-lg bg-slate-800 p-3" placeholder="Nome completo" value={form.name} onChange={(e) => update("name", e.target.value)} required />
             <input className="rounded-lg bg-slate-800 p-3" placeholder="E-mail" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} required />

@@ -1,9 +1,9 @@
-from datetime import date
+from datetime import datetime, date
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
-from app.core.models import Church, Family, User, AuditLog
+from app.core.models import Church, Family, User, AuditLog, UserRole, RolePermission, Permission
 from app.db.base import get_db
 from app.security.password import hash_password
 import uuid
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/members", tags=["Membros"])
 
 
 class MemberRegisterInput(BaseModel):
-    church_slug: str
+    branch_slug: str
     name: str
     email: EmailStr
     password: str
@@ -95,7 +95,7 @@ def serialize_member(user: User, include_sensitive: bool = False) -> dict:
 
 
 def can_approve_members(user: User, db: Session) -> bool:
-    rows = (
+    return (
         db.query(User)
         .join(UserRole, UserRole.user_id == User.id)
         .join(RolePermission, RolePermission.role_id == UserRole.role_id)
@@ -105,11 +105,8 @@ def can_approve_members(user: User, db: Session) -> bool:
             Permission.code == "member.approve",
         )
         .first()
+        is not None
     )
-    return rows is not None
-
-
-from app.core.models import UserRole, RolePermission, Permission
 
 
 @router.post("/register")
@@ -117,15 +114,19 @@ def register_member(payload: MemberRegisterInput, db: Session = Depends(get_db))
     if not payload.data_consent:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Consentimento de dados é obrigatório")
 
-    church = db.query(Church).filter_by(slug=payload.church_slug).first()
-    if not church:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Igreja não encontrada")
+    branch = db.query(Church).filter_by(
+        slug=payload.branch_slug,
+        is_active=True,
+    ).first()
+
+    if not branch:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Filial não encontrada")
 
     if db.query(User).filter_by(email=payload.email.lower()).first():
         raise HTTPException(status.HTTP_409_CONFLICT, "E-mail já cadastrado")
 
     user = User(
-        church_id=church.id,
+        church_id=branch.id,
         name=payload.name.strip(),
         email=payload.email.lower(),
         password_hash=hash_password(payload.password),
@@ -158,10 +159,10 @@ def register_member(payload: MemberRegisterInput, db: Session = Depends(get_db))
     db.add(
         AuditLog(
             user_id=user.id,
-            church_id=church.id,
+            church_id=branch.id,
             action="CREATE",
             module="MEMBERS",
-            description=f"Novo cadastro pendente: {user.name}",
+            description=f"Novo cadastro pendente na filial {branch.name}: {user.name}",
             new_values={"id": user.id, "email": user.email},
         )
     )

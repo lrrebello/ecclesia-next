@@ -1,10 +1,34 @@
 # Especificação funcional inicial
 
+## Estrutura organizacional
+
+A aplicação suporta uma hierarquia de igrejas e filiais:
+
+```text
+Igreja-mãe
+├── Filial A
+├── Filial B
+└── Filial C
+```
+
+- Cada filial é um tenant operacional.
+- Membros, famílias, ministérios e permissões pertencem à filial.
+- A igreja-mãe pode ter visão consolidada das filiais.
+- O cadastro público exige a escolha da igreja-mãe e da filial.
+
 ## Módulos implementados
+
+### Igrejas e filiais
+
+- Hierarquia de igreja-mãe e filiais
+- Tipos: sede e filial
+- Listagem pública de igrejas e filiais
+- Criação de igrejas e filiais autenticada
+- Vínculo do membro à filial escolhida
 
 ### Autenticação
 
-- Cadastro de usuário vinculado a uma igreja
+- Cadastro de usuário vinculado a uma filial
 - Login com JWT
 - Endpoint de perfil autenticado
 - Endpoint de permissões efetivas
@@ -18,26 +42,24 @@
 - Consentimento LGPD/GDPR
 - Perfil autenticado
 - Edição do próprio perfil
-- Listagem de membros da igreja
+- Listagem de membros da filial
 - Aprovação e rejeição de cadastros pendentes
 - Auditoria de cadastro, atualização de perfil e aprovação
 
 ### Famílias
 
 - Criação de famílias
-- Listagem de famílias da igreja
+- Listagem de famílias da filial
 - Detalhe de família
 - Atualização de família
 - Exclusão de família
 - Vínculo e desvinculação de membros
 - Definição de responsável familiar
-- Dados de contato e endereço da família
-- Auditoria das operações sensíveis
 
 ### Ministérios
 
 - Criação de ministérios
-- Listagem de ministérios da igreja do usuário
+- Listagem de ministérios da filial
 - Detalhe de ministério
 - Atualização de ministério
 - Desativação de ministério
@@ -45,20 +67,6 @@
 - Remoção de membros
 - Líder, vice-líder e líderes extras
 - Identificação de ministério infantil
-- Registro de auditoria nas operações sensíveis
-
-## Regras de negócio
-
-- Um usuário pertence a uma igreja.
-- Um usuário pode pertencer a uma família.
-- Uma família pertence a uma igreja.
-- Uma família pode ter um responsável.
-- Ao excluir uma família, seus membros são desvinculados.
-- Um usuário pode participar de vários ministérios.
-- Cadastros iniciam como pendentes.
-- A aprovação exige a permissão `member.approve`.
-- Apenas membros ativos da mesma igreja podem ser vinculados a ministérios.
-- Líder, vice-líder e líderes extras podem gerenciar o ministério.
 
 ## Próximos módulos
 
