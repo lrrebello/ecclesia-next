@@ -7,13 +7,13 @@ from app.api.deps import get_current_user
 from app.core.models import (
     Bill,
     Church,
-    Donation,
     Event,
     Family,
     Ministry,
     Transaction,
     User,
 )
+from app.modules.donations.models import Donation
 from app.db.base import get_db
 
 router = APIRouter(prefix="/admin", tags=["Administração e Relatórios"])
