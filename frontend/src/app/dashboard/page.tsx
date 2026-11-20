@@ -78,6 +78,11 @@ export default function DashboardPage() {
               <p className="text-sm text-slate-400">Ministérios</p>
               <p className="mt-1 font-medium">Gerenciar ministérios</p>
             </a>
+
+            <a href="/events" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Agenda</p>
+              <p className="mt-1 font-medium">Eventos e reuniões</p>
+            </a>
           </div>
         </div>
       </div>

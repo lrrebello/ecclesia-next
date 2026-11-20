@@ -34,6 +34,7 @@ class Church(Base):
     users = relationship("User", back_populates="church", foreign_keys=["User.church_id"])
     ministries = relationship("Ministry", back_populates="church")
     families = relationship("Family", back_populates="church")
+    events = relationship("Event", back_populates="church")
 
 
 class Role(Base):
@@ -153,6 +154,31 @@ class Ministry(Base):
         secondary=member_ministries,
         back_populates="ministries",
     )
+    events = relationship("Event", back_populates="ministry")
+
+
+class Event(Base):
+    __tablename__ = "events"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    ministry_id: Mapped[str | None] = mapped_column(ForeignKey("ministries.id"))
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    start_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    end_at: Mapped[datetime | None] = mapped_column(DateTime)
+    location: Mapped[str | None] = mapped_column(String(255))
+    recurrence_type: Mapped[str] = mapped_column(String(20), default="none")
+    recurrence_interval: Mapped[int | None] = mapped_column(Integer, default=1)
+    recurrence_until: Mapped[date | None] = mapped_column(Date)
+    is_public: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_by: Mapped[str | None] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=datetime.utcnow)
+
+    church = relationship("Church", back_populates="events")
+    ministry = relationship("Ministry", back_populates="events")
+    created_by_user = relationship("User", foreign_keys=[created_by])
 
 
 class AuditLog(Base):

@@ -12,7 +12,7 @@ Igreja-mãe
 ```
 
 - Cada filial é um tenant operacional.
-- Membros, famílias, ministérios e permissões pertencem à filial.
+- Membros, famílias, ministérios, eventos e permissões pertencem à filial.
 - A igreja-mãe pode ter visão consolidada das filiais.
 - O cadastro público exige a escolha da igreja-mãe e da filial.
 
@@ -44,33 +44,43 @@ Igreja-mãe
 - Edição do próprio perfil
 - Listagem de membros da filial
 - Aprovação e rejeição de cadastros pendentes
-- Auditoria de cadastro, atualização de perfil e aprovação
 
 ### Famílias
 
-- Criação de famílias
-- Listagem de famílias da filial
-- Detalhe de família
-- Atualização de família
-- Exclusão de família
+- Criação, listagem, edição e exclusão de famílias
 - Vínculo e desvinculação de membros
-- Definição de responsável familiar
+- Responsável familiar
 
 ### Ministérios
 
-- Criação de ministérios
-- Listagem de ministérios da filial
-- Detalhe de ministério
-- Atualização de ministério
-- Desativação de ministério
-- Vínculo de membros ativos
-- Remoção de membros
+- Criação, listagem, edição e desativação de ministérios
+- Vínculo de membros
 - Líder, vice-líder e líderes extras
-- Identificação de ministério infantil
+- Ministérios infantis
+
+### Eventos
+
+- Criação de eventos gerais ou vinculados a ministérios
+- Título, descrição, local, início e fim
+- Eventos públicos e internos
+- Recorrência diária, semanal e mensal
+- Ocorrências calculadas dinamicamente, sem duplicar registros
+- Agenda filtrada pelos ministérios do usuário
+- Permissão de líderes para eventos do ministério
+- Auditoria de criação, atualização e desativação
+
+## Regras de negócio
+
+- Um usuário pertence a uma filial.
+- Uma família pertence a uma filial.
+- Um ministério pertence a uma filial.
+- Um evento pertence a uma filial e pode pertencer a um ministério.
+- Eventos recorrentes são armazenados como uma única série.
+- Líder, vice-líder e líderes extras podem gerenciar eventos do ministério.
+- A exclusão de eventos é lógica, preservando histórico e auditoria.
 
 ## Próximos módulos
 
-- Eventos e recorrência
 - Finanças
 - Mídia e devocionais
 - Estudos e quizzes
