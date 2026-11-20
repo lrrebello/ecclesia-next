@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, date
+from decimal import Decimal
 from sqlalchemy import String, Boolean, DateTime, Date, ForeignKey, Integer, Text, Numeric, JSON, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
@@ -35,6 +36,11 @@ class Church(Base):
     ministries = relationship("Ministry", back_populates="church")
     families = relationship("Family", back_populates="church")
     events = relationship("Event", back_populates="church")
+    financial_accounts = relationship("FinancialAccount", back_populates="church")
+    transaction_categories = relationship("TransactionCategory", back_populates="church")
+    payment_methods = relationship("PaymentMethod", back_populates="church")
+    transactions = relationship("Transaction", back_populates="church")
+    bills = relationship("Bill", back_populates="church")
 
 
 class Role(Base):
@@ -155,6 +161,7 @@ class Ministry(Base):
         back_populates="ministries",
     )
     events = relationship("Event", back_populates="ministry")
+    transactions = relationship("Transaction", back_populates="ministry")
 
 
 class Event(Base):
@@ -178,6 +185,107 @@ class Event(Base):
 
     church = relationship("Church", back_populates="events")
     ministry = relationship("Ministry", back_populates="events")
+    created_by_user = relationship("User", foreign_keys=[created_by])
+
+
+class FinancialAccount(Base):
+    __tablename__ = "financial_accounts"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    ministry_id: Mapped[str | None] = mapped_column(ForeignKey("ministries.id"))
+    name: Mapped[str] = mapped_column(String(160), nullable=False)
+    bank_name: Mapped[str | None] = mapped_column(String(160))
+    account_type: Mapped[str | None] = mapped_column(String(50))
+    account_number: Mapped[str | None] = mapped_column(String(80))
+    agency: Mapped[str | None] = mapped_column(String(50))
+    iban: Mapped[str | None] = mapped_column(String(50))
+    swift: Mapped[str | None] = mapped_column(String(30))
+    pix_key: Mapped[str | None] = mapped_column(String(160))
+    mbway_phone: Mapped[str | None] = mapped_column(String(30))
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    notes: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=datetime.utcnow)
+
+    church = relationship("Church", back_populates="financial_accounts")
+    ministry = relationship("Ministry")
+    transactions = relationship("Transaction", back_populates="financial_account")
+
+
+class TransactionCategory(Base):
+    __tablename__ = "transaction_categories"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    name: Mapped[str] = mapped_column(String(160), nullable=False)
+    type: Mapped[str] = mapped_column(String(20), nullable=False)
+    requires_member: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    church = relationship("Church", back_populates="transaction_categories")
+    transactions = relationship("Transaction", back_populates="category")
+
+
+class PaymentMethod(Base):
+    __tablename__ = "payment_methods"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    name: Mapped[str] = mapped_column(String(160), nullable=False)
+    is_electronic: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    church = relationship("Church", back_populates="payment_methods")
+    transactions = relationship("Transaction", back_populates="payment_method")
+
+
+class Bill(Base):
+    __tablename__ = "bills"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    ministry_id: Mapped[str | None] = mapped_column(ForeignKey("ministries.id"))
+    description: Mapped[str] = mapped_column(String(255), nullable=False)
+    supplier_name: Mapped[str | None] = mapped_column(String(160))
+    amount: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    amount_paid: Mapped[Decimal] = mapped_column(Numeric(14, 2), default=Decimal("0.00"))
+    due_date: Mapped[date] = mapped_column(Date, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    notes: Mapped[str | None] = mapped_column(Text)
+    created_by: Mapped[str | None] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=datetime.utcnow)
+
+    church = relationship("Church", back_populates="bills")
+    ministry = relationship("Ministry")
+    created_by_user = relationship("User", foreign_keys=[created_by])
+    transactions = relationship("Transaction", back_populates="bill")
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    ministry_id: Mapped[str | None] = mapped_column(ForeignKey("ministries.id"))
+    category_id: Mapped[str | None] = mapped_column(ForeignKey("transaction_categories.id"))
+    payment_method_id: Mapped[str | None] = mapped_column(ForeignKey("payment_methods.id"))
+    financial_account_id: Mapped[str | None] = mapped_column(ForeignKey("financial_accounts.id"))
+    bill_id: Mapped[str | None] = mapped_column(ForeignKey("bills.id"))
+    member_id: Mapped[str | None] = mapped_column(ForeignKey("users.id"))
+    type: Mapped[str] = mapped_column(String(20), nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    transaction_date: Mapped[date] = mapped_column(Date, nullable=False)
+    receipt_path: Mapped[str | None] = mapped_column(String(255))
+    created_by: Mapped[str | None] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    church = relationship("Church", back_populates="transactions")
+    ministry = relationship("Ministry", back_populates="transactions")
+    category = relationship("TransactionCategory", back_populates="transactions")
+    payment_method = relationship("PaymentMethod", back_populates="transactions")
+    financial_account = relationship("FinancialAccount", back_populates="transactions")
+    bill = relationship("Bill", back_populates="transactions")
+    member = relationship("User", foreign_keys=[member_id])
     created_by_user = relationship("User", foreign_keys=[created_by])
 
 

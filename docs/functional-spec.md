@@ -12,9 +12,8 @@ Igreja-mãe
 ```
 
 - Cada filial é um tenant operacional.
-- Membros, famílias, ministérios, eventos e permissões pertencem à filial.
+- Membros, famílias, ministérios, eventos, finanças e permissões pertencem à filial.
 - A igreja-mãe pode ter visão consolidada das filiais.
-- O cadastro público exige a escolha da igreja-mãe e da filial.
 
 ## Módulos implementados
 
@@ -61,13 +60,22 @@ Igreja-mãe
 ### Eventos
 
 - Criação de eventos gerais ou vinculados a ministérios
-- Título, descrição, local, início e fim
-- Eventos públicos e internos
 - Recorrência diária, semanal e mensal
-- Ocorrências calculadas dinamicamente, sem duplicar registros
+- Ocorrências calculadas dinamicamente
 - Agenda filtrada pelos ministérios do usuário
-- Permissão de líderes para eventos do ministério
-- Auditoria de criação, atualização e desativação
+
+### Finanças
+
+- Categorias de receita e despesa por filial
+- Métodos de pagamento por filial
+- Contas bancárias da filial ou ministério
+- Lançamentos de receita e despesa
+- Valores monetários em precisão decimal
+- Vínculo opcional do lançamento a membro, ministério, conta e conta a pagar
+- Categorias podem exigir identificação do membro
+- Contas a pagar com valor, vencimento, fornecedor e status
+- Dashboard com receita, despesa, saldo, contas pendentes e vencidas
+- Auditoria de criação de lançamentos
 
 ## Regras de negócio
 
@@ -75,13 +83,13 @@ Igreja-mãe
 - Uma família pertence a uma filial.
 - Um ministério pertence a uma filial.
 - Um evento pertence a uma filial e pode pertencer a um ministério.
-- Eventos recorrentes são armazenados como uma única série.
-- Líder, vice-líder e líderes extras podem gerenciar eventos do ministério.
-- A exclusão de eventos é lógica, preservando histórico e auditoria.
+- Um lançamento financeiro pertence a uma filial e pode estar vinculado a ministério, membro, conta ou conta a pagar.
+- Valores financeiros usam precisão decimal.
+- A permissão `finance.manage` é necessária para configurar e lançar finanças.
+- A aprovação de membros exige a permissão `member.approve`.
 
 ## Próximos módulos
 
-- Finanças
 - Mídia e devocionais
 - Estudos e quizzes
 - Área infantil
