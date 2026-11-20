@@ -80,7 +80,6 @@ class Family(Base):
 
     church = relationship("Church", back_populates="families")
     responsible = relationship("User", foreign_keys=[responsible_id])
-    members = relationship("User", back_populates="family")
 
 
 class User(Base):
@@ -126,6 +125,14 @@ class User(Base):
         secondary=member_ministries,
         back_populates="members",
     )
+
+
+# A relação é definida após User para permitir referência explícita à foreign key correta.
+Family.members = relationship(
+    "User",
+    back_populates="family",
+    foreign_keys=[User.family_id],
+)
 
 
 class UserRole(Base):
