@@ -24,7 +24,8 @@ def get_current_user(
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Tipo de token inválido")
 
     user = db.query(User).filter_by(id=payload.get("sub")).first()
-    if not user or user.status != "active":
+
+    if not user or user.status not in ["active", "approved"]:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Usuário inválido ou inativo")
 
     return user
