@@ -28,6 +28,7 @@ class Church(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     users = relationship("User", back_populates="church")
     ministries = relationship("Ministry", back_populates="church")
+    families = relationship("Family", back_populates="church")
 
 
 class Role(Base):
@@ -58,8 +59,16 @@ class Family(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
     church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
     name: Mapped[str] = mapped_column(String(160), nullable=False)
+    responsible_id: Mapped[str | None] = mapped_column(ForeignKey("users.id"))
+    address: Mapped[str | None] = mapped_column(Text)
+    phone: Mapped[str | None] = mapped_column(String(50))
+    observations: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    members = relationship("User", back_populates="family")
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=datetime.utcnow)
+
+    church = relationship("Church", back_populates="families")
+    responsible = relationship("User", foreign_keys=[responsible_id])
+    members = relationship("User", back_populates="family", foreign_keys=[User.family_id])
 
 
 class User(Base):
@@ -98,7 +107,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     church = relationship("Church", back_populates="users")
-    family = relationship("Family", back_populates="members")
+    family = relationship("Family", back_populates="members", foreign_keys=[family_id])
     roles = relationship("UserRole", back_populates="user")
     ministries = relationship(
         "Ministry",

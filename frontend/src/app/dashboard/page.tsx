@@ -64,14 +64,19 @@ export default function DashboardPage() {
               <p className="mt-1 font-medium">Editar dados</p>
             </a>
 
-            <a href="/ministries" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
-              <p className="text-sm text-slate-400">Ministérios</p>
-              <p className="mt-1 font-medium">Gerenciar ministérios</p>
-            </a>
-
             <a href="/members" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
               <p className="text-sm text-slate-400">Membros</p>
               <p className="mt-1 font-medium">Listar e aprovar</p>
+            </a>
+
+            <a href="/families" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Famílias</p>
+              <p className="mt-1 font-medium">Gerenciar famílias</p>
+            </a>
+
+            <a href="/ministries" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Ministérios</p>
+              <p className="mt-1 font-medium">Gerenciar ministérios</p>
             </a>
           </div>
         </div>

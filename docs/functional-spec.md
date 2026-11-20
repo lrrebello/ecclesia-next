@@ -21,7 +21,18 @@
 - Listagem de membros da igreja
 - Aprovação e rejeição de cadastros pendentes
 - Auditoria de cadastro, atualização de perfil e aprovação
-- Modelo de família
+
+### Famílias
+
+- Criação de famílias
+- Listagem de famílias da igreja
+- Detalhe de família
+- Atualização de família
+- Exclusão de família
+- Vínculo e desvinculação de membros
+- Definição de responsável familiar
+- Dados de contato e endereço da família
+- Auditoria das operações sensíveis
 
 ### Ministérios
 
@@ -40,16 +51,17 @@
 
 - Um usuário pertence a uma igreja.
 - Um usuário pode pertencer a uma família.
+- Uma família pertence a uma igreja.
+- Uma família pode ter um responsável.
+- Ao excluir uma família, seus membros são desvinculados.
 - Um usuário pode participar de vários ministérios.
 - Cadastros iniciam como pendentes.
 - A aprovação exige a permissão `member.approve`.
 - Apenas membros ativos da mesma igreja podem ser vinculados a ministérios.
 - Líder, vice-líder e líderes extras podem gerenciar o ministério.
-- Exclusões sensíveis são lógicas, preservando histórico e auditoria.
 
 ## Próximos módulos
 
-- Famílias: criação, vínculo e gestão
 - Eventos e recorrência
 - Finanças
 - Mídia e devocionais
