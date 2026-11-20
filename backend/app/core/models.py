@@ -1,6 +1,6 @@
 import uuid
-from datetime import datetime
-from sqlalchemy import String, Boolean, DateTime, ForeignKey, Integer, Text, Numeric, JSON, Table, Column
+from datetime import datetime, date
+from sqlalchemy import String, Boolean, DateTime, Date, ForeignKey, Integer, Text, Numeric, JSON, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 
@@ -53,13 +53,41 @@ class RolePermission(Base):
     permission_id: Mapped[str] = mapped_column(ForeignKey("permissions.id"), primary_key=True)
 
 
+class Family(Base):
+    __tablename__ = "families"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
+    church_id: Mapped[str] = mapped_column(ForeignKey("churches.id"), nullable=False)
+    name: Mapped[str] = mapped_column(String(160), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    members = relationship("User", back_populates="family")
+
+
 class User(Base):
     __tablename__ = "users"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_default)
     church_id: Mapped[str | None] = mapped_column(ForeignKey("churches.id"))
+    family_id: Mapped[str | None] = mapped_column(ForeignKey("families.id"))
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(160), nullable=False)
     password_hash: Mapped[str | None] = mapped_column(String(255))
+
+    birth_date: Mapped[date | None] = mapped_column(Date)
+    baptism_date: Mapped[date | None] = mapped_column(Date)
+    conversion_date: Mapped[date | None] = mapped_column(Date)
+    gender: Mapped[str | None] = mapped_column(String(30))
+    marital_status: Mapped[str | None] = mapped_column(String(50))
+    spouse_name: Mapped[str | None] = mapped_column(String(160))
+    documents: Mapped[str | None] = mapped_column(String(200))
+    tax_id: Mapped[str | None] = mapped_column(String(30))
+    address: Mapped[str | None] = mapped_column(Text)
+    phone: Mapped[str | None] = mapped_column(String(50))
+    profile_photo: Mapped[str | None] = mapped_column(String(255))
+    postal_code: Mapped[str | None] = mapped_column(String(30))
+    concelho: Mapped[str | None] = mapped_column(String(120))
+    localidade: Mapped[str | None] = mapped_column(String(120))
+    education_level: Mapped[str | None] = mapped_column(String(120))
+    observations: Mapped[str | None] = mapped_column(Text)
+
     status: Mapped[str] = mapped_column(String(20), default="pending")
     is_email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     email_verification_token: Mapped[str | None] = mapped_column(String(255), unique=True)
@@ -68,7 +96,9 @@ class User(Base):
     data_consent_at: Mapped[datetime | None] = mapped_column(DateTime)
     marketing_consent: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
     church = relationship("Church", back_populates="users")
+    family = relationship("Family", back_populates="members")
     roles = relationship("UserRole", back_populates="user")
     ministries = relationship(
         "Ministry",

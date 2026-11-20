@@ -47,10 +47,7 @@ export default function DashboardPage() {
       <header className="border-b border-slate-800 bg-slate-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between p-4">
           <h1 className="text-xl font-bold">Ecclesia Next</h1>
-          <button
-            onClick={handleLogout}
-            className="rounded-lg bg-slate-800 px-4 py-2 text-sm hover:bg-slate-700"
-          >
+          <button onClick={handleLogout} className="rounded-lg bg-slate-800 px-4 py-2 text-sm hover:bg-slate-700">
             Sair
           </button>
         </div>
@@ -62,23 +59,20 @@ export default function DashboardPage() {
           <p className="mt-2 text-slate-300">{user?.email}</p>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <a
-              href="/ministries"
-              className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700"
-            >
+            <a href="/profile" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Meu perfil</p>
+              <p className="mt-1 font-medium">Editar dados</p>
+            </a>
+
+            <a href="/ministries" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
               <p className="text-sm text-slate-400">Ministérios</p>
               <p className="mt-1 font-medium">Gerenciar ministérios</p>
             </a>
 
-            <div className="rounded-lg bg-slate-800 p-4">
+            <a href="/members" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
               <p className="text-sm text-slate-400">Membros</p>
-              <p className="mt-1 font-medium">Em construção</p>
-            </div>
-
-            <div className="rounded-lg bg-slate-800 p-4">
-              <p className="text-sm text-slate-400">Eventos</p>
-              <p className="mt-1 font-medium">Em construção</p>
-            </div>
+              <p className="mt-1 font-medium">Listar e aprovar</p>
+            </a>
           </div>
         </div>
       </div>
