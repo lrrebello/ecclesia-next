@@ -1,11 +1,23 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
-from app.core.models import Bill, FinancialAccount, Ministry, PaymentMethod, Transaction, TransactionCategory, User, AuditLog
+from app.core.models import (
+    AuditLog,
+    Bill,
+    FinancialAccount,
+    Ministry,
+    PaymentMethod,
+    Permission,
+    RolePermission,
+    Transaction,
+    TransactionCategory,
+    User,
+    UserRole,
+)
 from app.db.base import get_db
 
 router = APIRouter(prefix="/finance", tags=["Finanças"])
@@ -73,9 +85,6 @@ def can_manage_finance(user: User, db: Session) -> bool:
     )
 
 
-from app.core.models import Permission, RolePermission, UserRole
-
-
 def serialize_transaction(transaction: Transaction) -> dict:
     return {
         "id": transaction.id,
@@ -138,7 +147,7 @@ def dashboard(
     today = date.today()
     next_30_days = today + timedelta(days=30)
 
-    pending_bills = db.query(func.sum(Bill.amount - Bill.amount_paid)).filter(
+    pending_bills = db.query(func.coalesce(func.sum(Bill.amount - Bill.amount_paid), 0)).filter(
         Bill.church_id == current_user.church_id,
         Bill.status != "paid",
         Bill.due_date <= next_30_days,

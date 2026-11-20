@@ -26,8 +26,11 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://ecclesia:368614011932@db:5432/ecclesia
       REDIS_URL: redis://redis:6379/0
+      UPLOAD_DIR: /app/uploads
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
