@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, date
 from decimal import Decimal
-from sqlalchemy import String, Boolean, DateTime, Date, ForeignKey, Integer, Text, Numeric, JSON, Table, Column
+from sqlalchemy import String, Boolean, DateTime, Date, ForeignKey, Integer, Text, Numeric, JSON, Table, Column, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 
@@ -24,15 +24,15 @@ class Church(Base):
     parent_id: Mapped[str | None] = mapped_column(ForeignKey("churches.id"))
     name: Mapped[str] = mapped_column(String(160), nullable=False)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
-    type: Mapped[str] = mapped_column(String(30), default="branch")
+    type: Mapped[str] = mapped_column(String(30), default="branch", server_default=text("'branch'"))
     country: Mapped[str | None] = mapped_column(String(80))
     currency_code: Mapped[str] = mapped_column(String(3), default="EUR")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_main: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_main: Mapped[bool] = mapped_column(Boolean, default=False, server_default=text("false"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     parent = relationship("Church", remote_side=[id], backref="branches")
-    users = relationship("User", back_populates="church", foreign_keys=["User.church_id"])
+    users = relationship("User", back_populates="church")
     ministries = relationship("Ministry", back_populates="church")
     families = relationship("Family", back_populates="church")
     events = relationship("Event", back_populates="church")
@@ -79,8 +79,8 @@ class Family(Base):
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=datetime.utcnow)
 
     church = relationship("Church", back_populates="families")
-    responsible = relationship("User", foreign_keys="Family.responsible_id")
-    members = relationship("User", back_populates="family", foreign_keys="User.family_id")
+    responsible = relationship("User", foreign_keys=[responsible_id])
+    members = relationship("User", back_populates="family")
 
 
 class User(Base):
