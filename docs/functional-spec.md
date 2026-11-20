@@ -12,8 +12,7 @@ Igreja-mãe
 ```
 
 - Cada filial é um tenant operacional.
-- Membros, famílias, ministérios, eventos, finanças e permissões pertencem à filial.
-- A igreja-mãe pode ter visão consolidada das filiais.
+- Membros, famílias, ministérios, eventos, finanças, donativos e permissões pertencem à filial.
 
 ## Módulos implementados
 
@@ -71,22 +70,31 @@ Igreja-mãe
 - Contas bancárias da filial ou ministério
 - Lançamentos de receita e despesa
 - Valores monetários em precisão decimal
-- Vínculo opcional do lançamento a membro, ministério, conta e conta a pagar
-- Categorias podem exigir identificação do membro
 - Contas a pagar com valor, vencimento, fornecedor e status
 - Dashboard com receita, despesa, saldo, contas pendentes e vencidas
-- Auditoria de criação de lançamentos
 
-## Regras de negócio
+### Donativos e Modelo 25
 
-- Um usuário pertence a uma filial.
-- Uma família pertence a uma filial.
-- Um ministério pertence a uma filial.
-- Um evento pertence a uma filial e pode pertencer a um ministério.
-- Um lançamento financeiro pertence a uma filial e pode estar vinculado a ministério, membro, conta ou conta a pagar.
-- Valores financeiros usam precisão decimal.
-- A permissão `finance.manage` é necessária para configurar e lançar finanças.
-- A aprovação de membros exige a permissão `member.approve`.
+- Cadastro de doadores por filial
+- Registo de donativos com valor, data, recibo e observações
+- Identificação de donativos elegíveis para o Modelo 25
+- Criação de declaração anual por ano fiscal
+- Inclusão e remoção de donativos na declaração
+- Impedimento de duplicação de donativos entre declarações
+- Exportação de ficheiro CSV para conferência e envio ao Portal das Finanças
+- Marcação da declaração como enviada
+- Auditoria de donativos e envio da declaração
+
+## Regras do Modelo 25
+
+- Nem toda receita é donativo.
+- Nem todo donativo é automaticamente elegível para o Modelo 25.
+- Donativos elegíveis exigem doador, NIF, valor, data e recibo.
+- Um donativo só pode pertencer a uma declaração.
+- A declaração deve ser criada por ano fiscal.
+- A declaração só pode ser marcada como enviada se possuir donativos.
+- Após o envio, a declaração não pode ser alterada.
+- O envio ao Portal das Finanças deve ocorrer até ao fim de fevereiro do ano seguinte.
 
 ## Próximos módulos
 

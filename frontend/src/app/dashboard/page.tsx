@@ -88,6 +88,16 @@ export default function DashboardPage() {
               <p className="text-sm text-slate-400">Finanças</p>
               <p className="mt-1 font-medium">Lançamentos e contas</p>
             </a>
+
+            <a href="/donations" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Donativos</p>
+              <p className="mt-1 font-medium">Registar donativos</p>
+            </a>
+
+            <a href="/modelo25" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Modelo 25</p>
+              <p className="mt-1 font-medium">Declaração anual</p>
+            </a>
           </div>
         </div>
       </div>
