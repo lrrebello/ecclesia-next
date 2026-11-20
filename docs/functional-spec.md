@@ -12,7 +12,7 @@ Igreja-mãe
 ```
 
 - Cada filial é um tenant operacional.
-- Membros, famílias, ministérios, eventos, finanças, donativos, mídia, devocionais, estudos e conteúdos infantis pertencem à filial.
+- Membros, famílias, ministérios, eventos, finanças, donativos, mídia, devocionais, estudos, conteúdos infantis, notificações e uploads pertencem à filial.
 
 ## Módulos implementados
 
@@ -143,6 +143,28 @@ Igreja-mãe
 - Relatório anual de donativos
 - Acesso protegido pela permissão `admin.manage`
 
+### Notificações
+
+- Notificações por filial
+- Envio para todos os membros aprovados, um ministério ou um usuário específico
+- Tipos de notificação
+- Link de ação opcional
+- Caixa de notificações no frontend
+- Marcação individual de leitura
+- Prevenção de duplicação de entrega
+
+### Uploads e armazenamento
+
+- Upload de imagens, vídeos, áudios e documentos
+- Validação de tipo MIME
+- Limite de 50 MB por arquivo
+- Armazenamento local configurável através de `UPLOAD_DIR`
+- Nome interno seguro com UUID
+- Preservação do nome original
+- Controle de visibilidade pública ou privada
+- Download autenticado
+- Registro de tamanho, tipo e usuário responsável
+
 ## Geração assistida por IA
 
 A aplicação mantém prompts padronizados para:
@@ -168,10 +190,11 @@ OPENAI_API_KEY=
 OPENAI_BASE_URL=https://api.openai.com/v1
 OPENAI_CHAT_MODEL=gpt-4o-mini
 OPENAI_IMAGE_MODEL=gpt-image-1
+UPLOAD_DIR=./uploads
 ```
 
 ## Próximos módulos
 
-- Notificações
-- Uploads e armazenamento
 - Integrações externas
+- Push notifications
+- Relatórios avançados

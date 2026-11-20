@@ -119,6 +119,11 @@ export default function DashboardPage() {
               <p className="mt-1 font-medium">Atividades infantis</p>
             </a>
 
+            <a href="/notifications" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Notificações</p>
+              <p className="mt-1 font-medium">Avisos e comunicações</p>
+            </a>
+
             <a href="/admin" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
               <p className="text-sm text-slate-400">Administração</p>
               <p className="mt-1 font-medium">Dashboards e relatórios</p>
