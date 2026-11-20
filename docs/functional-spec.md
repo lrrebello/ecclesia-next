@@ -12,7 +12,7 @@ Igreja-mãe
 ```
 
 - Cada filial é um tenant operacional.
-- Membros, famílias, ministérios, eventos, finanças, donativos e permissões pertencem à filial.
+- Membros, famílias, ministérios, eventos, finanças, donativos, mídia e devocionais pertencem à filial.
 
 ## Módulos implementados
 
@@ -85,6 +85,25 @@ Igreja-mãe
 - Marcação da declaração como enviada
 - Auditoria de donativos e envio da declaração
 
+### Mídia
+
+- Álbuns de mídia por filial
+- Vínculo opcional a ministérios
+- Itens de imagem, vídeo, áudio e documento
+- Suporte a arquivo local e URL externa
+- Miniaturas, tamanho e duração
+- Controle de publicação e desativação
+
+### Devocionais
+
+- Criação de devocionais por filial
+- Título, referência bíblica, texto bíblico, conteúdo e oração
+- Vínculo opcional a ministérios
+- Data de publicação
+- Publicação e despublicação
+- Marcação de leitura pelo membro
+- Prevenção de leituras duplicadas
+
 ## Regras do Modelo 25
 
 - Nem toda receita é donativo.
@@ -98,7 +117,6 @@ Igreja-mãe
 
 ## Próximos módulos
 
-- Mídia e devocionais
 - Estudos e quizzes
 - Área infantil
 - Administração e dashboards
