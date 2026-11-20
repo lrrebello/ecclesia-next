@@ -108,6 +108,16 @@ export default function DashboardPage() {
               <p className="text-sm text-slate-400">Devocionais</p>
               <p className="mt-1 font-medium">Leituras diárias</p>
             </a>
+
+            <a href="/studies" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Estudos</p>
+              <p className="mt-1 font-medium">Lições e quizzes</p>
+            </a>
+
+            <a href="/kids" className="rounded-lg bg-slate-800 p-4 transition hover:bg-slate-700">
+              <p className="text-sm text-slate-400">Área Kids</p>
+              <p className="mt-1 font-medium">Atividades infantis</p>
+            </a>
           </div>
         </div>
       </div>

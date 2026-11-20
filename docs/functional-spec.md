@@ -12,7 +12,7 @@ Igreja-mãe
 ```
 
 - Cada filial é um tenant operacional.
-- Membros, famílias, ministérios, eventos, finanças, donativos, mídia e devocionais pertencem à filial.
+- Membros, famílias, ministérios, eventos, finanças, donativos, mídia, devocionais, estudos e conteúdos infantis pertencem à filial.
 
 ## Módulos implementados
 
@@ -104,19 +104,62 @@ Igreja-mãe
 - Marcação de leitura pelo membro
 - Prevenção de leituras duplicadas
 
-## Regras do Modelo 25
+### Estudos
 
-- Nem toda receita é donativo.
-- Nem todo donativo é automaticamente elegível para o Modelo 25.
-- Donativos elegíveis exigem doador, NIF, valor, data e recibo.
-- Um donativo só pode pertencer a uma declaração.
-- A declaração deve ser criada por ano fiscal.
-- A declaração só pode ser marcada como enviada se possuir donativos.
-- Após o envio, a declaração não pode ser alterada.
-- O envio ao Portal das Finanças deve ocorrer até ao fim de fevereiro do ano seguinte.
+- Estudos por filial e ministério
+- Módulos e lições ordenados
+- Público-alvo e nível de dificuldade
+- Conteúdo para adultos, jovens e crianças
+- Vídeo, áudio e imagem por lição
+- Publicação e despublicação
+- Progresso individual de conclusão
+- Destaques e notas pessoais
+
+### Quizzes
+
+- Criação de quizzes vinculados a lições
+- Perguntas de múltipla escolha
+- Alternativas, resposta correta e explicação
+- Tentativas com respostas, pontuação e total de perguntas
+- Geração assistida por IA a partir do conteúdo da lição
+
+### Área infantil
+
+- Conteúdos infantis por filial
+- Tema, faixa etária e tipo de conteúdo
+- Atividades geradas por IA
+- Prompts seguros para imagens infantis
+- Publicação e despublicação
+
+## Geração assistida por IA
+
+A aplicação mantém prompts padronizados para:
+
+- Geração de perguntas e respostas de quizzes
+- Resumo didático de lições
+- Criação de atividades infantis
+- Criação de prompts para imagens infantis
+
+As regras centrais são:
+
+- Fidelidade ao conteúdo fornecido
+- Proibição de invenção de doutrinas ou versículos
+- Linguagem adequada ao público-alvo
+- Proteção de conteúdos infantis
+- Respostas estruturadas em JSON
+- Auditoria das gerações
+
+As variáveis de ambiente necessárias são:
+
+```env
+OPENAI_API_KEY=
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_CHAT_MODEL=gpt-4o-mini
+OPENAI_IMAGE_MODEL=gpt-image-1
+```
 
 ## Próximos módulos
 
-- Estudos e quizzes
-- Área infantil
 - Administração e dashboards
+- Notificações
+- Relatórios

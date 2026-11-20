@@ -10,7 +10,8 @@ from app.modules.events.routes import router as events_router
 from app.modules.finance.routes import router as finance_router
 from app.modules.donations.routes import router as donations_router
 from app.modules.media.routes import router as media_router
-from app.modules.media import models as media_models
+from app.modules.studies.routes import router as studies_router
+from app.modules.studies import models as studies_models
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, version="0.1.0")
@@ -37,3 +38,4 @@ app.include_router(events_router, prefix="/api/v1")
 app.include_router(finance_router, prefix="/api/v1")
 app.include_router(donations_router, prefix="/api/v1")
 app.include_router(media_router, prefix="/api/v1")
+app.include_router(studies_router, prefix="/api/v1")
