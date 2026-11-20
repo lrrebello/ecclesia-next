@@ -131,6 +131,18 @@ Igreja-mãe
 - Prompts seguros para imagens infantis
 - Publicação e despublicação
 
+### Administração e relatórios
+
+- Visão consolidada da igreja-mãe e filiais
+- Métricas de membros, famílias, ministérios e eventos
+- Métricas financeiras consolidadas
+- Total de donativos elegíveis para o Modelo 25
+- Relatório por filial
+- Relatório de membros por status
+- Relatório financeiro mensal
+- Relatório anual de donativos
+- Acesso protegido pela permissão `admin.manage`
+
 ## Geração assistida por IA
 
 A aplicação mantém prompts padronizados para:
@@ -160,6 +172,6 @@ OPENAI_IMAGE_MODEL=gpt-image-1
 
 ## Próximos módulos
 
-- Administração e dashboards
 - Notificações
-- Relatórios
+- Uploads e armazenamento
+- Integrações externas
