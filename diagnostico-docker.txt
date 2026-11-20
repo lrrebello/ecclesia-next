@@ -1,0 +1,187 @@
+========================================
+ESTRUTURA DO PROJETO (2 níveis)
+========================================
+.
+./backend
+./backend/alembic
+./backend/alembic.ini
+./backend/app
+./backend/Dockerfile
+./backend/requirements.txt
+./backend/tests
+./diagnostico-docker.txt
+./docker-compose.yml
+./docs
+./docs/architecture.md
+./docs/functional-spec.md
+./.env
+./frontend
+./frontend/Dockerfile
+./frontend/next.config.js
+./frontend/node_modules
+./frontend/package.json
+./frontend/postcss.config.js
+./frontend/src
+./frontend/tailwind.config.js
+./frontend/tsconfig.json
+./.gitignore
+./README.md
+./seed-initial-church.sql
+
+========================================
+docker-compose.yml
+========================================
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ecclesia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ecclesia}
+      POSTGRES_DB: ${POSTGRES_DB:-ecclesia}
+    ports:
+      - "${DB_HOST_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ecclesia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://ecclesia:368614011932@db:5432/ecclesia
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  postgres_data:
+========================================
+Dockerfile (raiz)
+========================================
+ARQUIVO NÃO ENCONTRADO NA RAIZ
+
+========================================
+Dockerfile (frontend/)
+========================================
+FROM node:22-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
+
+========================================
+Dockerfile (backend/ ou api/)
+========================================
+FROM python:3.12-slim
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+========================================
+.dockerignore
+========================================
+ARQUIVO NÃO ENCONTRADO
+
+========================================
+package.json (raiz)
+========================================
+ARQUIVO NÃO ENCONTRADO
+
+========================================
+package.json (frontend/)
+========================================
+{
+  "name": "ecclesia-next-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.7.3",
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "tailwindcss": "3.4.17",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.49"
+  }
+}
+========================================
+PERMISSÕES DOS ARQUIVOS
+========================================
+-rw-r--r--. 1 lucas lucas 529 nov 20 09:49 frontend/package.json
+.:
+total 24
+drwxr-xr-x. 1 lucas lucas  210 nov 20 13:55 .
+drwxr-xr-x. 1 lucas lucas  982 nov 20 11:05 ..
+drwxr-xr-x. 1 lucas lucas  104 nov 20 11:05 backend
+-rw-r--r--. 1 lucas lucas 3682 nov 20 13:55 diagnostico-docker.txt
+-rw-r--r--. 1 lucas lucas 1186 nov 20 11:39 docker-compose.yml
+drwxr-xr-x. 1 lucas lucas   66 nov 20 11:05 docs
+-rw-r--r--. 1 lucas lucas 1741 nov 20 11:36 .env
+drwxr-xr-x. 1 lucas lucas  198 nov 20 11:13 frontend
+-rw-r--r--. 1 lucas lucas  140 nov 20 09:49 .gitignore
+-rw-r--r--. 1 lucas lucas 2125 nov 20 09:49 README.md
+-rw-r--r--. 1 lucas lucas  316 nov 20 11:43 seed-initial-church.sql
+
+frontend:
+total 24
+drwxr-xr-x. 1 lucas lucas 198 nov 20 11:13 .
+drwxr-xr-x. 1 lucas lucas 210 nov 20 13:55 ..
+-rw-r--r--. 1 lucas lucas 118 nov 20 09:49 Dockerfile
+-rw-r--r--. 1 lucas lucas  43 nov 20 09:49 next.config.js
+drwxr-xr-x. 1 lucas lucas   0 nov 20 11:13 node_modules
+-rw-r--r--. 1 lucas lucas 529 nov 20 09:49 package.json
+-rw-r--r--. 1 lucas lucas  68 nov 20 09:49 postcss.config.js
+drwxr-xr-x. 1 lucas lucas   6 nov 20 11:05 src
+-rw-r--r--. 1 lucas lucas  97 nov 20 09:49 tailwind.config.js
+-rw-r--r--. 1 lucas lucas 642 nov 20 09:49 tsconfig.json
+
+========================================
+USUÁRIO ATUAL
+========================================
+uid=1000(lucas) gid=1000(lucas) grupos=1000(lucas),497(wheel) contexto=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
